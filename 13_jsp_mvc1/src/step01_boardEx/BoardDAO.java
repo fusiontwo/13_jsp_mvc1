@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class BoardDAO {
 
@@ -45,8 +46,7 @@ public class BoardDAO {
 	public void insertBoard(BoardDTO boardDTO) {
 		
 		// 단위 테스트
-		System.out.println("!!!!!!!!!!!!!!");
-		System.out.println(boardDTO);
+		//System.out.println(boardDTO);
 		
 		try {
 			
@@ -67,6 +67,87 @@ public class BoardDAO {
 		} finally {
 			getClose();
 		}
+		
+	}
+	
+	
+	// 게시글 전체 조회 DAO
+	public ArrayList<BoardDTO> getBoardList() {
+		
+		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>();
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD");
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				
+				BoardDTO temp = new BoardDTO();
+				temp.setBoardId(rs.getLong("BOARD_ID"));
+				temp.setWriter(rs.getString("WRITER"));
+				temp.setSubject(rs.getString("SUBJECT"));
+				temp.setReadCnt(rs.getLong("READ_CNT"));
+				temp.setEnrollDt(rs.getDate("ENROLL_DT"));
+				boardList.add(temp);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+		// 단위테스트
+		//System.out.println(boardList);
+		
+		return boardList;
+		
+	}
+	
+	// 게시글 상세조회 DAO
+	public BoardDTO getBoardDetail(long boardId) {
+		
+//		System.out.println(boardId);
+		
+		BoardDTO boardDTO = new BoardDTO();
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("UPDATE BOARD SET READ_CNT = READ_CNT + 1 WHERE BOARD_ID = ?");
+			pstmt.setLong(1, boardId);
+			pstmt.executeUpdate();
+			
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD WHERE BOARD_ID = ?");
+			pstmt.setLong(1, boardId);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				boardDTO.setBoardId(rs.getLong("BOARD_ID"));
+				boardDTO.setWriter(rs.getString("WRITER"));
+				boardDTO.setEmail(rs.getString("EMAIL"));
+				boardDTO.setSubject(rs.getString("SUBJECT"));
+				boardDTO.setContent(rs.getString("CONTENT"));
+				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
+				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+		System.out.println(boardDTO);
+		
+		return boardDTO;
+		
 	}
 	
 	

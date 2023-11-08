@@ -35,7 +35,7 @@
 	<script>
 		alert("게시글이 되었습니다.");
 		// location.href = "url"; > url로 페이지를 이동한다.
-		location.href = "bWrite.jsp";
+		location.href = "bList.jsp";
 	</script>
 
 
