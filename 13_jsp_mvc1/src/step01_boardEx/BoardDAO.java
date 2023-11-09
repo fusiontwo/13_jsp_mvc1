@@ -150,5 +150,61 @@ public class BoardDAO {
 		
 	}
 	
+	// 비밀번호 인증 DAO
+	public boolean checkAuthorizedUser(BoardDTO boardDTO) {
+		
+		// 단위테스트
+//		System.out.println(boardDTO);
+		
+		boolean isAuthorizedUser = false;
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD WHERE BOARD_ID = ? AND PASSWORD = ?");
+			pstmt.setLong(1, boardDTO.getBoardId());
+			pstmt.setString(2, boardDTO.getPassword());
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				isAuthorizedUser = true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+		// 단위테스트
+//		System.out.println(isAuthorizedUser);
+		
+		return isAuthorizedUser;
+	}
+	
+	// 게시글 수정 DAO
+	public void updateBoard(BoardDTO boardDTO) {
+		
+		// 단위테스트
+		System.out.println(boardDTO);
+		
+		try {
+			
+			getConnection();
+			pstmt = conn.prepareStatement("UPDATE BOARD SET SUBJECT = ? , CONTENT = ? WHERE BOARD_ID = ?");
+			pstmt.setString(1, boardDTO.getSubject());
+			pstmt.setString(2, boardDTO.getContent());
+			pstmt.setLong(3, boardDTO.getBoardId());
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+	}
+	
 	
 }

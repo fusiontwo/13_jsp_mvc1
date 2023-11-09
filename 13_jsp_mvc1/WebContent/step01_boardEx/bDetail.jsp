@@ -44,7 +44,7 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-					<input type="button" value="수정" onclick="">
+					<input type="button" value="수정" onclick="location.href='bAuthentication.jsp?boardId=<%=boardDTO.getBoardId()%>&menu=update'">
 					<input type="button" value="삭제" onclick="">
 					<input type="button" value="목록보기" onclick="location.href='bList.jsp'">
 				</td>
